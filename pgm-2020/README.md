@@ -50,7 +50,7 @@ Run `run_experiment_tan_chow_liu.sh`.
 To obtain the ML test error, uncomment the lines that initialize the parameters with ML parameters, and observe the initial test error.
 
 ### TAN Subset
-Run `run_experiment_tan_subset`.
+Run `run_experiment_tan_subset.sh`.
 Note that there is a discrepancy between the notation in the paper and the experiment source code.
 In particular, the parameter `max_augmenting_features` in the source code refers to the value `K` in the paper.
 However, `max_augmenting_features` is always 1 greater than `K` in the paper, because the no-augmenting-parent option (only the class variable is a parent of the feature variable in the Bayesian network) is also counted as 1 in the experiment code.
