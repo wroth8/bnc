@@ -32,7 +32,7 @@ by
 bnc_hybrid_tradeoff = 123.4
 ```
 
-Note that experiments write results to a `tensorboard` and a `stats` directory within the experiment directory specified by the parameter `--experiment_dir`.
+Note that experiments write results to a `tensorboard` and a `stats` directory within the experiment directory specified by the parameter `--experiment-dir`.
 Make sure that the `stats` directory exists, otherwise the experiment will crash right before finishing when results are written to the `stats` directory.
 All experiments were conducted on the CPU by setting the environment variable `CUDA_VISIBLE_DEVICES=""`, i.e., no GPU is required.
 
