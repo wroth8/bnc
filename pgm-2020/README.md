@@ -11,6 +11,8 @@ This directory contains Python code using Tensorflow to reproduce the experiment
 }
 ```
 
+This paper is also available at `TODO: arxiv link`.
+
 ## Usage
 
 1. Clone this repository: `git clone https://github.com/wroth8/bnc.git`
