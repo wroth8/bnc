@@ -63,7 +63,7 @@ This experiment was only conducted on `letter` and `satimage`, because the numbe
 ### TAN Heuristic
 Run `run_experiment_tan_heuristic.sh`.
 Note that the same discrepancy as in TAN Subset between `max_augmenting_features` and `K` exists.
-Moreover, note that we actually implemented four different feature orderings, but we only reported results for feature orderings {0,2,3} because feature orderings 0 and 1 performed similarly.
+Moreover, note that we actually implemented four different feature orderings, but in the paper we only reported results for feature orderings {0,2,3} because feature orderings 0 and 1 performed similarly.
 
 ### Recover Chow-Liu
 Run `run_experiment_recover_chow_liu.sh`.
