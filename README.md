@@ -2,6 +2,10 @@
 
 This repository contains the code of research projects concerned with Bayesian network classifiers.
 
+---
+
+## Differentiable TAN Structure Learning for Bayesian Network Classifiers
+
 The directory `pgm-2020` contains experiments of the paper
 
 ```
