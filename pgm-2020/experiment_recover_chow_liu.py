@@ -178,6 +178,7 @@ def train(model,
 
 
 def run(dataset,
+        chow_liu_root_feature_idx,
         n_epochs,
         batch_size,
         learning_rate_start,
@@ -216,7 +217,8 @@ def run(dataset,
 
     #-----------------------------------------------------------------------------------------------------------------------
     # Remove singleton features and compute Chow Liu TAN Structure
-    root_feature_idx = 0 # TODO: make this a parameter
+    assert chow_liu_root_feature_idx < n_input_features
+    root_feature_idx = chow_liu_root_feature_idx
     mi_graph_file = '{}/{}_mi.npz'.format(dataset_dir, dataset)
     mi_graph_dict = dict(np.load(mi_graph_file))
     mi_graph = mi_graph_dict['mi_graph_{}'.format(fold_idx + 1)]
@@ -349,9 +351,16 @@ def main():
     assert n_epochs >= 1
     assert options.experiment_dir != ''
 
+    n_features = {
+            'letter' : 15, # 15 because 1 singleton (constant) dimension is being removed
+            'mnist' : 196,
+            'satimage' : 36,
+            'usps' : 256 }
+
+    gridvals_chow_liu_root_feature_idx = range(n_features[dataset])
     gridvals_learning_rate_start = [3e-2, 3e-3]
-    gridvals = [gridvals_learning_rate_start]
-    # TODO: Make root feature idx a random parameter
+    gridvals = [gridvals_chow_liu_root_feature_idx,
+                gridvals_learning_rate_start]
 
     grid = list(product(*gridvals))
     n_grid = len(grid)
@@ -365,7 +374,8 @@ def main():
         raise Exception('taskid {} too large (only {} defined)'.format(taskid, n_jobs))
 
     params = grid[(taskid - 1) // n_seeds_per_parameter]
-    learning_rate_start = params[0]
+    chow_liu_root_feature_idx = params[0]
+    learning_rate_start = params[1]
 
     rng_seed = rng_seeds[taskid - 1]
     tf.random.set_seed(rng_seed)
@@ -383,6 +393,7 @@ def main():
     print('gumbel_softmax_temperature_end: {}'.format(gumbel_softmax_temperature_end))
     print('-' * 80)
     print('Grid parameters:'.format(taskid))
+    print('chow_liu_root_feature_idx: {}'.format(chow_liu_root_feature_idx))
     print('learning_rate_start: {}'.format(learning_rate_start))
     print('rng_seed: {}'.format(rng_seed))
     print('-' * 80)
@@ -398,6 +409,7 @@ def main():
             tensorboard_logdir = '{}/tensorboard/experiment{:05d}'.format(experiment_dir, taskid)
 
         stats = run(dataset=dataset,
+                    chow_liu_root_feature_idx=chow_liu_root_feature_idx,
                     n_epochs=n_epochs,
                     batch_size=batch_size,
                     learning_rate_start=learning_rate_start,
@@ -413,6 +425,7 @@ def main():
     for stat_entry in stats_list[0]:
         stats_stacked[stat_entry] = np.stack([stat[stat_entry] for stat in stats_list], axis=0)
     stats_stacked['experiment_parameters/taskid'] = taskid
+    stats_stacked['chow_liu_root_feature_idx'] = chow_liu_root_feature_idx
     stats_stacked['experiment_parameters/learning_rate_start'] = learning_rate_start
     stats_stacked['experiment_parameters/rng_seed'] = rng_seed
 
