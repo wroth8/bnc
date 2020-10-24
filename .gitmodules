@@ -1,0 +1,3 @@
+[submodule "icpr-2020/nn-discrete-tf"]
+	path = icpr-2020/nn-discrete-tf
+	url = https://github.com/wroth8/nn-discrete-tf

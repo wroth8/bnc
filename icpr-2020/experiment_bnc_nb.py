@@ -5,10 +5,12 @@ from time import time
 from optparse import OptionParser
 from itertools import product
 
-from BNCModels import BayesNetClassifier
+from BNCModels import QuantizedBayesNetClassifier
 
 
 def run(dataset,
+        n_bits_integer,
+        n_bits_fractional,
         bnc_hybrid_tradeoff,
         bnc_hybrid_gamma,
         bnc_hybrid_eta,
@@ -57,13 +59,15 @@ def run(dataset,
 
     #-----------------------------------------------------------------------------------------------------------------------
     # Create the model
-    model =  BayesNetClassifier(
+    model =  QuantizedBayesNetClassifier(
             n_classes,
             n_unique_features,
+            n_bits_integer,
+            n_bits_fractional,
             init_data=(x_train, y_train) if init_ml else None)
 
     out = model(np.zeros((2,x_train.shape[1]), dtype=np.int32), True) # Build the model
-
+    
     print('#' * 80)
     model.summary()
     print('#' * 80)
@@ -234,7 +238,7 @@ def main():
     parser.add_option('--n-epochs', action='store', type='int', dest='n_epochs', default=300)
     parser.add_option('--batch-size', action='store', type='int', dest='batch_size', default=100)
     parser.add_option('--init-ml', action='store_true', dest='init_ml', default=False)
-
+    
     options, args = parser.parse_args()
     taskid = options.taskid
     experiment_dir = options.experiment_dir
@@ -249,11 +253,15 @@ def main():
     assert n_epochs >= 1
     assert options.experiment_dir != ''
 
-    rng = np.random.RandomState(seed=265304870)
+    rng = np.random.RandomState(seed=361273804)
     
-    gridvals_random_params = list(range(500))
+    gridvals_n_bits_total = list(range(1, 9))
+    gridvals_n_bits_integer = [1,2,3,4,5,6]
+    gridvals_random_params = list(range(100))
     gridvals_learning_rate_start = [3e-2, 3e-3]
-    gridvals = [gridvals_random_params,
+    gridvals = [gridvals_n_bits_total,
+                gridvals_n_bits_integer,
+                gridvals_random_params,
                 gridvals_learning_rate_start]
 
     grid = list(product(*gridvals))
@@ -262,19 +270,21 @@ def main():
     n_jobs = n_grid * n_seeds_per_parameter
 
     rng_seeds = rng.randint(1, 1e9, size=(n_jobs,))
-    random_bnc_hybrid_tradeoff = 10.0 ** rng.uniform(low=0.0, high=3.0, size=(len(gridvals_random_params),))
+    random_bnc_hybrid_tradeoff = 10.0 ** rng.uniform(low=1.0, high=3.0, size=(len(gridvals_random_params),))
     random_bnc_hybrid_gamma = 10.0 ** rng.uniform(low=-1.0, high=2.0, size=(len(gridvals_random_params),))
-    random_bnc_hybrid_eta = rng.uniform(low=1.0, high=20.0, size=(len(gridvals_random_params),))
-
+    
     if taskid > n_jobs:
         raise Exception('taskid {} too large (only {} defined)'.format(taskid, n_jobs))
 
     params = grid[(taskid - 1) // n_seeds_per_parameter]
-    random_param_idx = params[0]
-    learning_rate_start = params[1]
+    n_bits_total = params[0]
+    n_bits_integer = params[1]
+    random_param_idx = params[2]
+    learning_rate_start = params[3]
+    n_bits_fractional = n_bits_total - n_bits_integer # can also be negative
     bnc_hybrid_tradeoff = random_bnc_hybrid_tradeoff[random_param_idx]
     bnc_hybrid_gamma = random_bnc_hybrid_gamma[random_param_idx]
-    bnc_hybrid_eta = random_bnc_hybrid_eta[random_param_idx]
+    bnc_hybrid_eta = 10.0
 
     rng_seed = rng_seeds[taskid - 1]
     tf.random.set_seed(rng_seed)
@@ -290,6 +300,8 @@ def main():
     print('init_ml: {}'.format(init_ml))
     print('-' * 80)
     print('Grid parameters:'.format(taskid))
+    print('n_bits_total: {}'.format(n_bits_total))
+    print('n_bits_integer: {} [n_bits_fractional: {}]'.format(n_bits_integer, n_bits_fractional))
     print('random_param_idx: {} [tradeoff: {}, gamma: {}, beta: {}]'.format(
             random_param_idx, bnc_hybrid_tradeoff, bnc_hybrid_gamma, bnc_hybrid_eta))
     print('learning_rate_start: {}'.format(learning_rate_start))
@@ -307,6 +319,8 @@ def main():
             tensorboard_logdir = '{}/tensorboard/experiment{:05d}'.format(experiment_dir, taskid)
 
         stats = run(dataset=dataset,
+                    n_bits_integer=n_bits_integer,
+                    n_bits_fractional=n_bits_fractional,
                     bnc_hybrid_tradeoff=bnc_hybrid_tradeoff,
                     bnc_hybrid_gamma=bnc_hybrid_gamma,
                     bnc_hybrid_eta=bnc_hybrid_eta,
@@ -323,6 +337,9 @@ def main():
     for stat_entry in stats_list[0]:
         stats_stacked[stat_entry] = np.stack([stat[stat_entry] for stat in stats_list], axis=0)
     stats_stacked['experiment_parameters/taskid'] = taskid
+    stats_stacked['experiment_parameters/n_bits_total'] = n_bits_total
+    stats_stacked['experiment_parameters/n_bits_integer'] = n_bits_integer
+    stats_stacked['experiment_parameters/n_bits_fractional'] = n_bits_fractional
     stats_stacked['experiment_parameters/random_param_idx'] = random_param_idx
     stats_stacked['experiment_parameters/bnc_hybrid_tradeoff'] = bnc_hybrid_tradeoff
     stats_stacked['experiment_parameters/bnc_hybrid_gamma'] = bnc_hybrid_gamma
