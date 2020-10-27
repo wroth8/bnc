@@ -1,4 +1,4 @@
-name: icpr-2020
+name: icpr-2020-bnc-dnn
 channels:
   - defaults
 dependencies:

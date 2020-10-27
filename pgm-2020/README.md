@@ -3,15 +3,15 @@
 This directory contains Python code using Tensorflow to reproduce the experiments from our paper
 
 ```
-@INPROCEEDINGS{Roth2020,
+@INPROCEEDINGS{Roth2020a,
     title = {Differentiable {TAN} Structure Learning for {B}ayesian Network Classifiers},
     author = {Wolfgang Roth and Franz Pernkopf},
     booktitle = {International Conference on Probabilistic Graphical Models (PGM)},
-    year = {2020 (accepted for publication)},
+    year = {2020},
 }
 ```
 
-This paper is also available at `TODO: arxiv link`.
+This paper is also available at <https://arxiv.org/abs/2008.09566>.
 
 ## Usage
 
