@@ -48,7 +48,7 @@ Run `./run_experiment_bnc_nb.sh`
 ### Quantization for Bayesian networks with TAN structure
 Run `./run_experiment_bnc_tan.sh`
 
-### Quantization for fully-connected DNNs
+### Quantization for fully connected DNNs
 Run `./run_experiment_fc_dnn.sh`
 
 ### Quantization for CNNs (memory matched to Bayesian network classifiers)
