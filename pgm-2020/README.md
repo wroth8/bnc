@@ -41,32 +41,38 @@ All experiments were conducted on the CPU by setting the environment variable `C
 
 ## Experiments
 ### Naive Bayes
-Run `run_experiment_naive_bayes.sh`.
+Run `./run_experiment_naive_bayes.sh`
+
 To obtain the ML test error, uncomment the lines that initialize the parameters with ML parameters, and observe the initial test error.
 
 ### TAN Random
-Run `run_experiment_tan_random.sh`.
+Run `./run_experiment_tan_random.sh`
 
 ### TAN Chow-Liu
-Run `run_experiment_tan_chow_liu.sh`.
+Run `./run_experiment_tan_chow_liu.sh`
+
 To obtain the ML test error, uncomment the lines that initialize the parameters with ML parameters, and observe the initial test error.
 
 ### TAN Subset
-Run `run_experiment_tan_subset.sh`.
+Run `./run_experiment_tan_subset.sh`
+
 Note that there is a discrepancy between the notation in the paper and the experiment source code.
 In particular, the parameter `max_augmenting_features` in the source code refers to the value `K` in the paper.
 However, `max_augmenting_features` is always 1 greater than `K` in the paper, because the no-augmenting-parent option (only the class variable is a parent of the feature variable in the Bayesian network) is also counted as 1 in the experiment code.
 Therefore, `max_augmenting_features={3,6,9}` corresponds to `K={2,5,8}` in the paper.
 
 ### TAN All
-Run `run_experiment_tan_all.sh`.
+Run `./run_experiment_tan_all.sh`
+
 This experiment was only conducted on `letter` and `satimage`, because the number of features of `usps` and `mnist` is too large.
 
 ### TAN Heuristic
-Run `run_experiment_tan_heuristic.sh`.
+Run `./run_experiment_tan_heuristic.sh`
+
 Note that the same discrepancy as in TAN Subset between `max_augmenting_features` and `K` exists.
 Moreover, note that we actually implemented four different feature orderings, but in the paper we only reported results for feature orderings {0,2,3} because feature orderings 0 and 1 performed similarly.
 
 ### Recover Chow-Liu
-Run `run_experiment_recover_chow_liu.sh`.
+Run `./run_experiment_recover_chow_liu.sh`
+
 This experiment maximizes the negative likelihood loss to see whether the Chow-Liu structure can be recovered.

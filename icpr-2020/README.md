@@ -43,22 +43,22 @@ Note that the individual `.sh`-files provide more details about how individual e
 
 ## Experiments
 ### Quantization for Bayesian networks with naive Bayes structure
-Run `run_experiment_bnc_nb.sh`.
+Run `./run_experiment_bnc_nb.sh`
 
 ### Quantization for Bayesian networks with TAN structure
-Run `run_experiment_bnc_tan.sh`.
+Run `./run_experiment_bnc_tan.sh`
 
 ### Quantization for fully-connected DNNs
-Run `run_experiment_fc_dnn.sh`.
+Run `./run_experiment_fc_dnn.sh`
 
 ### Quantization for CNNs (memory matched to Bayesian network classifiers)
-Run `run_experiment_cnn_memory.sh`
+Run `./run_experiment_cnn_memory.sh`
 
 ### Quantization for CNNs (#operations matched to Bayesian network classifiers)
-Run `run_experiment_cnn_operations.sh`
+Run `./run_experiment_cnn_operations.sh`
 
-### Model-size-aware structure learning for Bayesian network classifiers with TAN structure
-Run `run_experiment_tan_structure_learning.sh`.
+### Model-size-aware TAN structure learning for Bayesian network classifiers
+Run `./run_experiment_tan_structure_learning.sh`
 
 In the paper, we use the `TAN Subset` setup from the PGM-2020 Paper.
 Note that the `max_augmenting_features` parameter in the code corresponds to the number of possible parent sets *including* the "no additional parent" option (i.e., class variable only).
