@@ -15,7 +15,7 @@ This paper is also available at <https://arxiv.org/abs/2010.11773>
 
 ## Usage
 
-1. Clone this repository: `git clone https://github.com/wroth8/bnc.git`
+1. Clone this repository: `git clone --recurse-submodules https://github.com/wroth8/bnc.git`
 2. Setup a Python environment (we used Python 3.7) with Tensorflow (we used Tensorflow 2.2). Alternatively, create a virtual environment from the included environment.yml and activate it.
     1. Create using conda: `conda env create -f environment.yml`
     2. Activate using conda: `conda activate icpr-2020-bnc-dnn`
